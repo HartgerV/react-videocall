@@ -5,10 +5,10 @@ const users = {};
 
 // Random ID until the ID is not in use
 async function randomID() {
-  let id = haiku();
+  let id = Math.floor(Math.random() * 1000);
   while (id in users) {
     await Promise.delay(5);
-    id = haiku();
+    id = Math.floor(Math.random() * 1000);
   }
   return id;
 }

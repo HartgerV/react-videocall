@@ -1,6 +1,7 @@
 import MediaDevice from './MediaDevice';
 import Emitter from './Emitter';
 import socket from './socket';
+import RecordRTC from './recordrtc';
 
 const PC_CONFIG = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };
 
@@ -32,6 +33,11 @@ class PeerConnection extends Emitter {
       .on('stream', (stream) => {
         this.pc.addStream(stream);
         this.emit('localStream', stream);
+        this.recorder = RecordRTC(stream, {
+          type: 'video'
+        });
+        this.recorder.startRecording();
+
         if (isCaller) socket.emit('request', { to: this.friendID });
         else this.createOffer();
       })
@@ -46,6 +52,10 @@ class PeerConnection extends Emitter {
    */
   stop(isStarter) {
     if (isStarter) socket.emit('end', { to: this.friendID });
+    this.recorder.stopRecording(function() {
+      let blob = recorder.getBlob();
+      invokeSaveAsDialog(blob);
+    });
     this.mediaDevice.stop();
     this.pc.close();
     this.pc = null;
