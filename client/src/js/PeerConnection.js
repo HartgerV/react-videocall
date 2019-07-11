@@ -53,7 +53,7 @@ class PeerConnection extends Emitter {
   stop(isStarter) {
     if (isStarter) socket.emit('end', { to: this.friendID });
     this.recorder.stopRecording(function() {
-      let blob = recorder.getBlob();
+      let blob = this.recorder.getBlob();
       invokeSaveAsDialog(blob);
     });
     this.mediaDevice.stop();
