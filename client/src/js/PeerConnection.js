@@ -10,9 +10,10 @@ class PeerConnection extends Emitter {
      * Create a PeerConnection.
      * @param {String} friendID - ID of the friend you want to call.
      */
-  constructor(friendID) {
+  constructor(friendID, doRecord) {
     super();
     this.pc = new RTCPeerConnection(PC_CONFIG);
+    this.doRecord = doRecord;
     this.pc.onicecandidate = event => socket.emit('call', {
       to: this.friendID,
       candidate: event.candidate
@@ -33,10 +34,12 @@ class PeerConnection extends Emitter {
       .on('stream', (stream) => {
         this.pc.addStream(stream);
         this.emit('localStream', stream);
-        this.recorder = RecordRTC(stream, {
-          type: 'video'
-        });
-        this.recorder.startRecording();
+        if(config.doRecord) {
+          this.recorder = RecordRTC(stream, {
+            type: 'video'
+          });
+          this.recorder.startRecording();
+        }
 
         if (isCaller) socket.emit('request', { to: this.friendID });
         else this.createOffer();
@@ -52,10 +55,15 @@ class PeerConnection extends Emitter {
    */
   stop(isStarter) {
     if (isStarter) socket.emit('end', { to: this.friendID });
-    this.recorder.stopRecording(function() {
-      let blob = this.recorder.getBlob();
-      invokeSaveAsDialog(blob);
-    });
+    if (config.doRecord)
+    {
+      this.recorder.stopRecording(function () {
+        // let blob = this.recorder.getBlob();
+        // invokeSaveAsDialog(blob);
+
+      });
+      this.recorder.save('video')
+    }
     this.mediaDevice.stop();
     this.pc.close();
     this.pc = null;

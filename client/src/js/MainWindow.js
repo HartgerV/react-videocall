@@ -14,6 +14,12 @@ class MainWindow extends Component {
     return () => startCall(true, friendID, config);
   }
 
+  callWithVideoRecord(video) {
+    const { startCall } = this.props;
+    const config = { audio: true, doRecord: true, video };
+    return () => startCall(true, friendID, config);
+  }
+
   render() {
     const { clientId } = this.props;
     document.title = `${clientId} - VideoCall`;
@@ -45,6 +51,12 @@ class MainWindow extends Component {
               className="btn-action fa fa-video-camera"
               onClick={this.callWithVideo(true)}
             />
+
+            <button
+              type="button"
+              className="btn-action fa fa-video-camera"
+              onClick={this.callWithVideoRecord(true)}
+              />
             <button
               type="button"
               className="btn-action fa fa-phone"

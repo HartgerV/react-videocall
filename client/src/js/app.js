@@ -12,6 +12,7 @@ class App extends Component {
     super(props);
     this.state = {
       clientId: '',
+      doRecord: false,
       callWindow: '',
       callModal: '',
       callFrom: '',
@@ -41,7 +42,7 @@ class App extends Component {
 
   startCall(isCaller, friendID, config) {
     this.config = config;
-    this.pc = new PeerConnection(friendID)
+    this.pc = new PeerConnection(friendID, this.state.doRecord)
       .on('localStream', (src) => {
         const newState = { callWindow: 'active', localSrc: src };
         if (!isCaller) newState.callModal = '';
