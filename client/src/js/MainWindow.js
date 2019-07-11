@@ -54,11 +54,6 @@ class MainWindow extends Component {
 
             <button
               type="button"
-              className="btn-action fa fa-video-camera"
-              onClick={this.callWithVideoRecord(true)}
-              />
-            <button
-              type="button"
               className="btn-action fa fa-phone"
               onClick={this.callWithVideo(false)}
             />

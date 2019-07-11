@@ -12,12 +12,12 @@ class CallWindow extends Component {
     };
     this.record = function() {
       if(this.recording) {
-        this.recorder.stopRecording(function () {
-          // let blob = this.recorder.getBlob();
-          // invokeSaveAsDialog(blob);
-
+        let recorder = this.recorder;
+        recorder.stopRecording(function () {
+          let blob = recorder.getBlob();
+          invokeSaveAsDialog(blob);
         });
-        this.recorder.save('video')
+        this.recording = false
       }
       else {
         this.recorder = RecordRTC(this.peerVideo.srcObject, {
@@ -105,7 +105,7 @@ class CallWindow extends Component {
           />
           <button
             type="button"
-            className="btn-action hangup fa fa-phone"
+            className={ this.recording ? 'btn-action hangup fa fa-video-camera' : 'btn-action hangup fa fa-phone hidden' }
             onClick={() => this.record()}
           />
         </div>
