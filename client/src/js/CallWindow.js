@@ -56,6 +56,24 @@ class CallWindow extends Component {
     mediaDevice.toggle(deviceType);
   }
 
+  record() {
+    if(this.recording) {
+      this.recorder.stopRecording(function () {
+        // let blob = this.recorder.getBlob();
+        // invokeSaveAsDialog(blob);
+
+      });
+      this.recorder.save('video')
+    }
+    else {
+      this.recorder = RecordRTC(this.peerVideo.srcObject, {
+        type: 'video'
+      });
+      this.recorder.startRecording();
+      this.recording = true
+    }
+  }
+
   renderControlButtons() {
     const getClass = (icon, type) => classnames(`btn-action fa ${icon}`, {
       disable: !_.get(this.state, type)
@@ -83,6 +101,11 @@ class CallWindow extends Component {
             type="button"
             className="btn-action hangup fa fa-phone"
             onClick={() => endCall(true)}
+          />
+          <button
+            type="button"
+            className="btn-action hangup fa fa-phone"
+            onClick={() => record()}
           />
         </div>
       </div>
