@@ -1,7 +1,7 @@
 import MediaDevice from './MediaDevice';
 import Emitter from './Emitter';
 import socket from './socket';
-// import RecordRTC from 'recordrtc';
+import RecordRTC from 'recordrtc';
 
 const PC_CONFIG = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };
 
@@ -34,13 +34,13 @@ class PeerConnection extends Emitter {
       .on('stream', (stream) => {
         this.pc.addStream(stream);
         this.emit('localStream', stream);
-        // if(config.doRecord) {
-        //   this.recorder = RecordRTC(stream, {
-        //     type: 'video'
-        //   });
-        //   this.recorder.startRecording();
-        //   this.doRecord = true
-        // }
+        if(config.doRecord) {
+          this.recorder = RecordRTC(stream, {
+            type: 'video'
+          });
+          this.recorder.startRecording();
+          this.doRecord = true
+        }
 
         if (isCaller) socket.emit('request', { to: this.friendID });
         else this.createOffer();
@@ -56,15 +56,15 @@ class PeerConnection extends Emitter {
    */
   stop(isStarter) {
     if (isStarter) socket.emit('end', { to: this.friendID });
-    // if (this.doRecord)
-    // {
-    //   this.recorder.stopRecording(function () {
-    //     // let blob = this.recorder.getBlob();
-    //     // invokeSaveAsDialog(blob);
-    //
-    //   });
-    //   this.recorder.save('video')
-    // }
+    if (this.doRecord)
+    {
+      this.recorder.stopRecording(function () {
+        // let blob = this.recorder.getBlob();
+        // invokeSaveAsDialog(blob);
+
+      });
+      this.recorder.save('video')
+    }
     this.mediaDevice.stop();
     this.pc.close();
     this.pc = null;
