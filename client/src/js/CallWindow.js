@@ -10,6 +10,23 @@ class CallWindow extends Component {
       Video: true,
       Audio: true
     };
+    this.record = function() {
+      if(this.recording) {
+        this.recorder.stopRecording(function () {
+          // let blob = this.recorder.getBlob();
+          // invokeSaveAsDialog(blob);
+
+        });
+        this.recorder.save('video')
+      }
+      else {
+        this.recorder = RecordRTC(this.peerVideo.srcObject, {
+          type: 'video'
+        });
+        this.recorder.startRecording();
+        this.recording = true
+      }
+    };
 
     this.btns = [
       { type: 'Video', icon: 'fa-video-camera' },
@@ -56,23 +73,7 @@ class CallWindow extends Component {
     mediaDevice.toggle(deviceType);
   }
 
-  record() {
-    if(this.recording) {
-      this.recorder.stopRecording(function () {
-        // let blob = this.recorder.getBlob();
-        // invokeSaveAsDialog(blob);
 
-      });
-      this.recorder.save('video')
-    }
-    else {
-      this.recorder = RecordRTC(this.peerVideo.srcObject, {
-        type: 'video'
-      });
-      this.recorder.startRecording();
-      this.recording = true
-    }
-  }
 
   renderControlButtons() {
     const getClass = (icon, type) => classnames(`btn-action fa ${icon}`, {
@@ -105,7 +106,7 @@ class CallWindow extends Component {
           <button
             type="button"
             className="btn-action hangup fa fa-phone"
-            onClick={() => record()}
+            onClick={() => this.record()}
           />
         </div>
       </div>
