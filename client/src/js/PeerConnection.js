@@ -1,7 +1,7 @@
 import MediaDevice from './MediaDevice';
 import Emitter from './Emitter';
 import socket from './socket';
-import RecordRTC from './recordrtc';
+import RecordRTC from 'recordrtc';
 
 const PC_CONFIG = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };
 
