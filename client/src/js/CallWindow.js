@@ -6,8 +6,10 @@ import _ from 'lodash';
 class CallWindow extends Component {
   constructor(props) {
     super(props);
+    this.addActiveClass= this.addActiveClass.bind(this);
     this.state = {
       Video: true,
+      active: false,
       Audio: true
     };
     this.record = function() {
@@ -95,7 +97,8 @@ class CallWindow extends Component {
     return (
       <div className={classnames('call-window', status)}>
         <video id="peerVideo" ref={el => this.peerVideo = el} autoPlay />
-        <video id="localVideo" ref={el => this.localVideo = el} autoPlay muted />
+        <video id="localVideo" className={this.state.active && 'active'}
+    onClick={ () => this.setState({active: !this.state.active}) } ref={el => this.localVideo = el} autoPlay muted />
         <div className="video-control">
           {this.renderControlButtons()}
           <button
